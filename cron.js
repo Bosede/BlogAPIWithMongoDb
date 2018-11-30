@@ -2,7 +2,7 @@ let CronJob = require("cron").CronJob;
 new CronJob(
   "* * * * * *",
   function() {
-    console.log("You will see this message every minute");
+    console.log("You will see this message every second");
   },
   null,
   true,
