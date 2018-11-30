@@ -9,7 +9,7 @@ const url = "mongodb://localhost:27017";
 
 // Database Name
 const dbName = "blogDBName";
-
+let db;
 // Use connect method to connect to the server
 MongoClient.connect(
   url,
@@ -17,12 +17,12 @@ MongoClient.connect(
     assert.equal(null, err);
     console.log("Connected successfully to server");
 
-    const db = client.db(dbName);
+    db = client.db(dbName);
 
     // insertDocuments(db, function() {
-    findDocuments(db, function() {
-      client.close();
-    });
+    //findDocuments(db, function() {
+    // client.close();
+    //});
   }
 );
 //});
@@ -55,25 +55,28 @@ MongoClient.connect(
 //   });
 // };
 
-//Find Documents with a Query Filter
-const findDocuments = function(db, callback) {
-  // Get the documents collection
-  const collection = db.collection("blogDB");
-  // Find some documents
-  collection.find({ a: 1 }).toArray(function(err, docs) {
-    assert.equal(err, null);
-    console.log("Found the following records");
-    console.log(docs);
-    callback(docs);
-  });
-};
-/* GET users listing. */
-router.get("/", function(req, res, next) {
-  res.send("respond with a resource");
-});
+// //Find Documents with a Query Filter
+// const findDocuments = function(db, callback) {
+//   // Get the documents collection
+//   const collection = db.collection("blogDB");
+//   // Find some documents
+//   collection.find({ a: 1 }).toArray(function(err, docs) {
+//     assert.equal(err, null);
+//     console.log("Found the following records");
+//     console.log(docs);
+//     callback(docs);
+//   });
+// };
+// /* GET users listing. */
+// router.get("/", function(req, res, next) {
+//   res.send("respond with a resource");
+// });
 
 router.post("/create", function(req, res, next) {
-  res.send("Post created");
+  db.collection("article").insert(req.body, function(err, result) {
+    console.log(err, result);
+    res.status(201).send(result);
+  });
 });
 router.get("/read", function(req, res, next) {
   res.send("Get post");

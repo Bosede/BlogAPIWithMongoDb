@@ -15,7 +15,10 @@
     "pug": "2.0.0-beta11"
   },
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "supertest": "^3.3.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/anthonyofume/blogWithDb.git"
