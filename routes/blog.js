@@ -10,6 +10,7 @@ const url = "mongodb://localhost:27017";
 // Database Name
 const dbName = "blogDBName";
 let db;
+
 // Use connect method to connect to the server
 MongoClient.connect(
   url,
@@ -21,7 +22,7 @@ MongoClient.connect(
 
     // insertDocuments(db, function() {
     //findDocuments(db, function() {
-    // client.close();
+    //client.close();
     //});
   }
 );
@@ -42,14 +43,12 @@ MongoClient.connect(
 // };
 
 //Find All Documents
-
 // const findDocuments = function(db, callback) {
 //   // Get the documents collection
-//   const collection = db.collection("blogDB");
+//   const collection = db.collection("article");
 //   // Find some documents
 //   collection.find({}).toArray(function(err, docs) {
-//     assert.equal(err, null);
-//     console.log("Found the following records");
+//     console.log(`Found the following records in ${collection}`);
 //     console.log(docs);
 //     callback(docs);
 //   });
@@ -72,14 +71,27 @@ MongoClient.connect(
 //   res.send("respond with a resource");
 // });
 
+/* GET home page. */
+router.get("/", function(req, res, next) {
+  res.render("Welcome to the blog");
+});
+
 router.post("/create", function(req, res, next) {
-  db.collection("article").insert(req.body, function(err, result) {
+  let body = req.body;
+  db.collection("article").insert(body, function(err, result) {
     console.log(err, result);
-    res.status(201).send(result);
+    res.send(result);
   });
 });
-router.get("/read", function(req, res, next) {
-  res.send("Get post");
+router.get("/read:id", function(req, res, next) {
+  let blogID = req.params.id;
+  blogID = new Object(blogID);
+  db.collection("article")
+    .find({})
+    .toArray(req.body, function(err, result) {
+      console.log(err, result);
+      res.send("result");
+    });
 });
 router.put("/update", function(req, res, next) {
   res.send("Update post");
