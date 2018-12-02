@@ -6,6 +6,7 @@ const assert = require("assert");
 
 // Connection URL
 const url = "mongodb://localhost:27017";
+let ObjectId = require("mongodb").ObjectID;
 
 // Database Name
 const dbName = "blogDBName";
@@ -76,27 +77,54 @@ router.get("/", function(req, res, next) {
   res.render("Welcome to the blog");
 });
 
+router.get("/all", function(req, res, next) {
+  let blogID = req.params.id;
+  db.collection("article")
+    .find({})
+    .toArray(function(err, result) {
+      console.log(err, result);
+      res.send(result);
+    });
+});
+
 router.post("/create", function(req, res, next) {
   let body = req.body;
-  db.collection("article").insert(body, function(err, result) {
+  db.collection("article").insertOne(body, function(err, result) {
     console.log(err, result);
     res.send(result);
   });
 });
+
 router.get("/read:id", function(req, res, next) {
   let blogID = req.params.id;
-  blogID = new Object(blogID);
+  blogID = new ObjectId(blogID);
   db.collection("article")
-    .find({})
-    .toArray(req.body, function(err, result) {
+    .find({ _id: blogID })
+    .toArray(function(err, result) {
       console.log(err, result);
-      res.send("result");
+      res.send(result);
     });
 });
-router.put("/update", function(req, res, next) {
-  res.send("Update post");
+
+router.put("/update:id", function(req, res, next) {
+  let body = req.body;
+  let blogID = req.params.id;
+  blogID = new ObjectId(blogID);
+  db.collection("article").update({ _id: blogID }, { $set: body }, function(
+    err,
+    result
+  ) {
+    console.log(err, result);
+    res.send(result);
+  });
 });
-router.delete("/delete", function(req, res, next) {
-  res.send("Post deleted");
+
+router.delete("/delete:id", function(req, res, next) {
+  let blogID = req.params.id;
+  blogID = new ObjectId(blogID);
+  db.collection("article").deleteOne({ _id: blogID }, function(err, result) {
+    console.log(err, result);
+    res.send(result);
+  });
 });
 module.exports = router;
